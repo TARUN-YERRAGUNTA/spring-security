@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up2</title>
+  <th:block th:replace="~{fragments/header :: header-styles}"></th:block>
+  <style>
+    body {
+      background-color: #e3e9f3;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding-top: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h2 {
+      margin-top: 20px;
+      font-size: 28px;
+      color: #111;
+    }
+
+    .progress-bar {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      position: relative;
+      margin: 0 20px;
+      color: #aaa;
+      font-weight: bold;
+    }
+
+    .step-circle {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #aaa;
+      background-color: #fff;
+      margin-right: 8px;
+    }
+
+    .step.active {
+      color: #003366;
+    }
+
+    .step.active .step-circle {
+      background-color: #003366;
+      border-color: #003366;
+    }
+
+    .signupContainer2 {
+      background-color: #fff;
+      padding: 40px;
+      margin-bottom: 40px;
+      width: 600px;
+      border-radius: 6px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .signupContainer2 h3 {
+      font-size: 20px;
+      color: #111;
+      margin-bottom: 10px;
+    }
+
+    .signupContainer2 p {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    .signupContainer2 h4 {
+      font-size: 16px;
+      color: #000;
+      margin-top: 30px;
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-size: 15px;
+      font-weight: normal;
+      color: #111;
+    }
+
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    input[type="text"].small-input,
+    select.small-input {
+      width: 30% !important;
+      padding: 12px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    .form-buttons {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .form-buttons button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      font-size: 14px;
+      border: none;
+      border-radius: 4px;
+      background-color: #003366;
+      color: white;
+      cursor: pointer;
+    }
+
+    .form-buttons button:hover {
+      background-color: #0055aa;
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: 10px;
+      display: block;
+    }
+
+    hr {
+      margin-top: 30px;
+      margin-bottom: 20px;
+      border: none;
+      border-top: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+<th:block th:replace="~{fragments/header :: nygov-header}"></th:block>
+
+<h2>Create an Account</h2>
+
+<!-- Progress Bar -->
+<div class="progress-bar">
+  <div class="step">
+    <div class="step-circle"></div>
+    Step 1
+  </div>
+  <div class="step active">
+    <div class="step-circle"></div>
+    Step 2
+  </div>
+  <div class="step">
+    <div class="step-circle"></div>
+    Step 3
+  </div>
+</div>
+
+<!-- Form Container -->
+<div class="signupContainer2">
+  <h3>Personal Information</h3>
+
+  <h4>Residential Address</h4>
+
+  <form th:action="@{/signupP2}" method="post">
+    <label for="street">Street Address (Optional)</label>
+    <input type="text" id="street" th:value="${street}" name="street">
+
+    <label for="apt">Apt, suite, floor, etc (Optional)</label>
+    <input type="text" id="apt" th:value="${apt}" name="apt">
+
+    <label for="city">City</label>
+    <input type="text" id="city" name="city" th:value="${city}" required/>
+
+    <label for="state">State </label>
+    <select name="state" id="state" class="small-input" required>
+		  <option th:each="st : ${states}"
+		          th:value="${st}"
+		          th:text="${st}"
+		          th:selected="${st == state}">
+		  </option>
+	</select>
+
+
+    <label for="zip">Zip Code (Optional)</label>
+    <input type="text" id="zip" name="zip"  th:value="${zip}" class="small-input">
+    <span th:if="${zipError}" th:text="${zipError}" class="error"></span>
+
+    <hr>
+
+    <label for="dob">Date Of Birth (MM/DD/YYYY)</label>
+    <input type="text" id="dob" name="dob" placeholder="MM/DD/YYYY" maxlength="10" th:value="${dob}" required class="small-input"/>
+    <span th:if="${dobError}" th:text="${dobError}" class="error"></span>
+
+    <div class="form-buttons">
+  			<button type="button" th:onclick="|window.location.href='@{/signupP1}'|">Back</button>
+  			<button type="submit" name="action" value="continue">Continue</button>
+	  </div>
+  </form>
+</div>
+
+<!-- DOB auto-formatting -->
+<script>
+  const dobInput = document.getElementById('dob');
+
+  dobInput.addEventListener('input', function(e) {
+    let value = dobInput.value.replace(/\D/g, '');
+
+    if (value.length > 2 && value.length <= 4) {
+      value = value.slice(0, 2) + '/' + value.slice(2);
+    } else if (value.length > 4) {
+      value = value.slice(0, 2) + '/' + value.slice(2, 4) + '/' + value.slice(4, 8);
+    }
+
+    dobInput.value = value;
+  });
+</script>
+
+</body>
+</html>

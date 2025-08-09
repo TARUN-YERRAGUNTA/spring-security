@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Create an Account</title>
+  <th:block th:replace="~{fragments/header :: header-styles}"></th:block>
+  <style>
+    body {
+      background-color: #e3e9f3;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding-top: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h2 {
+      margin-top: 40px;
+      font-size: 28px;
+      color: #111;
+    }
+
+    .progress-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+      gap: 50px;
+    }
+
+    .step {
+      text-align: center;
+      color: #777;
+    }
+
+    .step.active {
+      font-weight: bold;
+      color: #000;
+    }
+
+    .step-circle {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #ccc;
+      margin: 0 auto 5px;
+    }
+
+    .step.active .step-circle {
+      background-color: #003366;
+      border-color: #003366;
+    }
+
+    .signupContainer1 {
+      background-color: #fff;
+      padding: 40px;
+      margin-bottom: 40px;
+      width: 600px;
+      border-radius: 6px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .signupContainer1 h3 {
+      font-size: 20px;
+      color: #111;
+      margin-bottom: 10px;
+    }
+
+    .signupContainer1 p {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-size: 15px;
+      font-weight: normal;
+      color: #111;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    
+    input[type="tel"] {
+      width: 35%;
+      padding: 12px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    input[type="submit"] {
+      width: 100%;
+      margin-top: 30px;
+      padding: 15px;
+      background-color: #003366;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #002654;
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: 10px;
+      display: block;
+    }
+
+    hr {
+      margin-top: 30px;
+      margin-bottom: 20px;
+      border: none;
+      border-top: 1px solid #ccc;
+    }
+
+    .privacy-note {
+      font-size: 14px;
+      color: #222;
+      margin-bottom: 30px;
+    }
+
+    .privacy-note a {
+      color: #0000ee;
+      text-decoration: none;
+    }
+
+    .privacy-note a:hover {
+      text-decoration: underline;
+    }
+    
+    input.half-width {
+  		width: 35%;
+	}
+	
+	.form-buttons {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .form-buttons button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      font-size: 14px;
+      border: none;
+      border-radius: 4px;
+      background-color: #003366;
+      color: white;
+      cursor: pointer;
+    }
+
+    .form-buttons button:hover {
+      background-color: #0055aa;
+    }
+    
+  </style>
+</head>
+<body>
+<th:block th:replace="~{fragments/header :: nygov-header}"></th:block>
+
+<h2>Create an Account</h2>
+
+<div class="progress-bar">
+  <div class="step active">
+    <div class="step-circle"></div>
+    Step 1
+  </div>
+  <div class="step">
+    <div class="step-circle"></div>
+    Step 2
+  </div>
+  <div class="step">
+    <div class="step-circle"></div>
+    Step 3
+  </div>
+</div>
+
+<div class="signupContainer1">
+  <div class="privacy-note">
+    To confirm your identity, you will need to provide some personal information.
+    Your information will be used in compliance with applicable laws, regulations and policies and will not be used for marketing purposes.
+    
+  </div>
+
+  <h3>Account Information</h3>
+
+  <form th:action="@{/signupP1}" method="post">
+    <label for="firstname">First Name</label>
+    <input type="text" id="firstname" name="firstname" th:value="${firstname}" required/>
+
+    <label for="lastname">Last Name</label>
+    <input type="text" id="lastname" name="lastname" th:value="${lastname}" required/>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" th:value="${email}" required/>
+    <span th:if="${emailError1}" th:text="${emailError1}" class="error"></span>
+
+    <label for="confEmail">Confirm Email</label>
+    <input type="email" id="confEmail" name="confEmail" th:value="${confEmail}" required/>
+    <span th:if="${emailError2}" th:text="${emailError2}" class="error"></span>
+
+    <label for="phn">Mobile Phone Number <i>(Optional)</i></label>
+	<input type="tel" id="phn" name="phn" class="half-width" th:value="${phn}" placeholder="XXX-XXX-XXXX" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
+	<span th:if="${phnError}" th:text="${phnError}" class="error"></span>
+
+    <hr>
+
+    <label for="username">Create a Username</label>
+    <input type="text" id="username" name="username" th:value="${username}" required/>
+    <span th:if="${usernameError}" th:text="${usernameError}" class="error"></span>
+    
+    <div th:if="${usernameError2}" class="error">
+	  That username does not meet the requirements.<br>
+	  Usernames:
+	  <ul>
+	    <li>must be between 4 and 128 characters long</li>
+	    <li>can contain alphanumeric characters</li>
+	    <li>can contain the symbols @ - _ and .</li>
+	    <li>cannot contain spaces</li>
+	  </ul>
+	</div>
+
+
+    <div class="form-buttons">
+  			<button type="button" th:onclick="|window.location.href='@{/login}'|">Login</button>
+  			<button type="submit" name="action" value="continue">Continue</button>
+	 </div>
+  </form>
+
+  
+  
+ 
+</div>
+
+<script>
+  document.getElementById("phn").addEventListener("input", function(e) {
+    let input = e.target.value.replace(/\D/g, "");
+    let formatted = "";
+
+    if (input.length > 0) formatted += input.substring(0, 3);
+    if (input.length >= 4) formatted += "-" + input.substring(3, 6);
+    if (input.length >= 7) formatted += "-" + input.substring(6, 10);
+    
+    e.target.value = formatted;
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up - Step 3</title>
+  <th:block th:replace="~{fragments/header :: header-styles}"></th:block>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding-top: 60px;
+    }
+
+    .create-account-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 30px;
+      color: #003366;
+    }
+
+    /* Step Progress Bar */
+    .progress-bar {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      position: relative;
+      margin: 0 20px;
+      color: #aaa;
+      font-weight: bold;
+    }
+
+    .step-circle {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #aaa;
+      background-color: #fff;
+      margin-right: 8px;
+    }
+
+    .step.active {
+      color: #003366;
+    }
+
+    .step.active .step-circle {
+      background-color: #003366;
+      border-color: #003366;
+    }
+
+    .signupP3Container {
+      max-width: 800px;
+      background-color: white;
+      margin: 20px auto;
+      padding: 30px 40px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h3.section-title {
+      text-align: left;
+      margin-bottom: 5px;
+      color: #003366;
+    }
+
+    .subtitle {
+      text-align: left;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+
+    .info-table {
+      width: 100%;
+      margin: auto;
+      border-collapse: collapse;
+    }
+
+    .info-table td {
+      padding: 10px 15px;
+      vertical-align: top;
+    }
+
+    .info-table td.label {
+      text-align: right;
+      font-weight: bold;
+      white-space: nowrap;
+      width: 40%;
+    }
+
+    .info-table td.value {
+      text-align: left;
+      width: 60%;
+    }
+
+    h3.address-title {
+      text-align: center;
+      margin-top: 40px;
+      margin-bottom: 20px;
+      color: #003366;
+    }
+
+    .form-buttons {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .form-buttons button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      font-size: 14px;
+      border: none;
+      border-radius: 4px;
+      background-color: #003366;
+      color: white;
+      cursor: pointer;
+    }
+
+    .form-buttons button:hover {
+      background-color: #0055aa;
+    }
+  </style>
+</head>
+<body>
+<th:block th:replace="~{fragments/header :: nygov-header}"></th:block>
+
+  <!-- Create an Account Title -->
+  <div class="create-account-title">Create an Account</div>
+
+  <!-- Step Progress Bar -->
+  <div class="progress-bar">
+    <div class="step">
+      <div class="step-circle"></div>
+      Step 1
+    </div>
+    <div class="step">
+      <div class="step-circle"></div>
+      Step 2
+    </div>
+    <div class="step active">
+      <div class="step-circle"></div>
+      Step 3
+    </div>
+  </div>
+
+  <!-- Signup Review Container (Unchanged) -->
+  <div class="signupP3Container">
+    <h3 class="section-title">Review Your Information</h3>
+    <p class="subtitle">Use the back button if any edits are needed.</p>
+
+    <form th:action="@{/signupP3}" method="post">
+      <table class="info-table">
+        <tr>
+          <td class="label">Username:</td>
+          <td class="value"><span th:text="${username}">TarunSai185</span></td>
+        </tr>
+        <input type="hidden" name="username" th:value="${username}" />
+
+        <tr>
+          <td class="label">First Name:</td>
+          <td class="value"><span th:text="${firstname}">Tarun</span></td>
+        </tr>
+        <input type="hidden" name="firstname" th:value="${firstname}" />
+
+        <tr>
+          <td class="label">Last Name:</td>
+          <td class="value"><span th:text="${lastname}">Sai</span></td>
+        </tr>
+        <input type="hidden" name="lastname" th:value="${lastname}" />
+
+        <tr>
+          <td class="label">Email:</td>
+          <td class="value"><span th:text="${email}">tsai@email.com</span></td>
+        </tr>
+        <input type="hidden" name="email" th:value="${email}" />
+
+        <tr>
+          <td class="label">Mobile Phone Number:</td>
+          <td class="value"><span th:text="${phn}">1234567890</span></td>
+        </tr>
+        <input type="hidden" name="phn" th:value="${phn}" />
+
+        <tr>
+          <td class="label">Date of Birth (MM/DD/YYYY):</td>
+          <td class="value"><span th:text="${dob}">01/01/1990</span></td>
+        </tr>
+        <input type="hidden" name="dob" th:value="${dob}" />
+      </table>
+
+      <h3 class="address-title">Residential Address</h3>
+
+      <table class="info-table">
+        <tr>
+          <td class="label">Street Address:</td>
+          <td class="value"><span th:text="${street}">123 Main St</span></td>
+        </tr>
+        <input type="hidden" name="street" th:value="${street}" />
+
+        <tr>
+          <td class="label">Apt, suite, floor, etc:</td>
+          <td class="value"><span th:text="${apt}">Apt 4B</span></td>
+        </tr>
+        <input type="hidden" name="apt" th:value="${apt}" />
+
+        <tr>
+          <td class="label">City:</td>
+          <td class="value"><span th:text="${city}">Albany</span></td>
+        </tr>
+        <input type="hidden" name="city" th:value="${city}" />
+
+        <tr>
+          <td class="label">State:</td>
+          <td class="value"><span th:text="${state}">NY</span></td>
+        </tr>
+        <input type="hidden" name="state" th:value="${state}" />
+
+        <tr>
+          <td class="label">Zip:</td>
+          <td class="value"><span th:text="${zip}">12222</span></td>
+        </tr>
+        <input type="hidden" name="zip" th:value="${zip}" />
+      </table>
+
+      <div class="form-buttons">
+  			<button type="button" th:onclick="|window.location.href='@{/signupP2}'|">Back</button>
+  			<button type="submit" name="action" value="continue">Continue</button>
+	  </div>
+
+
+</body>
+</html>

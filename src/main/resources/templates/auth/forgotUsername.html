@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Forgot Username Page</title>
+  <th:block th:replace="~{fragments/header :: header-styles}"></th:block>
+ 
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #e2e8f0; /* Light blue/gray background */
+      display: flex;
+      padding-top:60px;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .message-box {
+      width: 90%;
+      max-width: 700px;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 5px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .error-box {
+	  background-color: #f8d7da;  /* light red */
+	  color: #721c24;             /* dark red */
+	  border: 1px solid #f5c6cb;
+	}
+	
+	.success-box {
+	  background-color: #d1ecf1;  /* light blue */
+	  color: #004085;             /* dark blue */
+	  border: 1px solid #bee5eb;
+	}
+    .page-title {
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 40px;
+    }
+
+    .instructions {
+      text-align: center;
+      max-width: 700px;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .forgotUsernameContainer {
+      background-color: white;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+      margin-top: 30px;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    .logo-section {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo-text {
+      font-size: 20px;
+      font-weight: bold;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .lock-icon {
+      font-size: 22px;
+      color: #f4b400;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+
+
+    .form-note {
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: normal;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      margin-bottom: 20px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      height:50px;
+      padding: 12px;
+      background-color: #003366;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background-color: #002244;
+    }
+    
+    .footer-note {
+      font-size: 12px;
+      color: #333;
+      margin-top: 15px;
+    }
+
+    .footer-note a {
+      color: #0000ee;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+<th:block th:replace="~{fragments/header :: nygov-header}"></th:block>
+
+	<!-- Dynamic Message Box -->
+  <div th:if="${forgotUsernameMailError}" class="message-box error-box">
+    No Username found for the data entered below.
+  </div>
+
+  <div th:if="${forgotUsernameMailMessage}" class="message-box success-box">
+    An email containing your Username(s) has been sent to the email address we have in our system.<br>
+    Please check your junk mail filters/folders in case the email from MyConnect has been blocked.
+  </div>
+
+  <!-- Page Title -->
+  <div class="page-title">FORGOT USERNAME SELF SERVICE</div>
+
+  <!-- Instructions -->
+  <div class="instructions">
+    <p>Please enter all the fields below and click on the 'Email me the Username' button.</p>
+    <p>Any Username(s) matching the combination of First Name, Last Name and Email will be emailed to the email address provided.</p>
+  </div>
+
+  <!-- Form Container -->
+  <div class="forgotUsernameContainer">
+
+    <!-- NY.gov Logo Text -->
+    <div class="logo-section">
+      <span class="lock-icon">🔒</span>
+      <span class="logo-text">My.CONNECT ID</span>
+      <div class="secure-text">Secure Access to My Connect Services</div>
+    </div>
+
+    <p class="form-note">* indicates required field</p>
+
+    <form th:action="@{/forgotUsername}" method="post">
+      <label for="firstname">First Name*</label>
+      <input type="text" id="firstname" name="firstname" th:value="${firstname}" required>
+
+      <label for="lastname">Last Name*</label>
+      <input type="text" id="lastname" name="lastname" th:value="${lastname}" required>
+
+      <label for="email">Email*</label>
+      <input type="email" id="email" name="email" th:value="${email}" required>
+
+      <input type="submit" class="submit-btn" value="Email me the Username">
+    </form>
+    
+    <div class="footer-note">
+      This site is protected by reCAPTCHA and the Google
+      <a href="https://policies.google.com/privacy" target="_blank">Privacy Policy</a> and
+      <a href="https://policies.google.com/terms" target="_blank">Terms of Service</a> apply.
+    </div>
+    
+  </div>
+
+</body>
+</html>
