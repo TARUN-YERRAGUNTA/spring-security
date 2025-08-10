@@ -1,6 +1,7 @@
 package com.tarun.SpringSecurity.service;
 
 import java.time.Year;
+
 import java.util.List;
 import java.util.Random;
 
@@ -10,6 +11,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -22,6 +24,9 @@ import com.tarun.SpringSecurity.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.persistence.EntityManager;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -40,20 +45,34 @@ public class AuthService {
 	private final UserRepository userRepo;
 	private final JavaMailSender mailSender;
 	private EntityManager em;
+	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	private final JwtService jwtService;
 	
-	public AuthService(AuthenticationManager authManager,UserRepository userRepo,JavaMailSender mailSender,EntityManager em) {
+	public AuthService(AuthenticationManager authManager,UserRepository userRepo,JavaMailSender mailSender,EntityManager em,JwtService jwtService) {
 		this.authManager = authManager;
 		this.userRepo = userRepo;
 		this.mailSender=mailSender;
 		this.em=em;
+		this.jwtService=jwtService;
 	}
 
-	public String postLoginVerify(String username, String password,ModelMap map) {
+	public String postLoginVerify(String username, String password,ModelMap map,HttpServletResponse response) {
 		
 		try {
 			Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-			
+			AccountInfo user = userRepo.findByUsername(username);
+	        if (user == null) {
+	            map.addAttribute("loginError", "Username and Password does not match");
+	            return "auth/login";
+	        }
 			if(authentication.isAuthenticated()) {
+					        	
+	            String token = jwtService.generateToken(username);
+	            Cookie jwtCookie = new Cookie("jwt", token);
+	            jwtCookie.setHttpOnly(true);
+	            jwtCookie.setPath("/");
+	            jwtCookie.setMaxAge(24 * 60 * 60);
+	            response.addCookie(jwtCookie);
 				return "pages/home";
 			}
 		}catch (Exception e) {
@@ -433,7 +452,7 @@ public class AuthService {
 		}
 		
 		AccountInfo user = userRepo.findByUsername(resetPassUsername);
-		user.setPassword(password);
+		user.setPassword(encoder.encode(password)); // Encode the password
 		userRepo.save(user);
 		
 		return "redirect:/login";
@@ -496,7 +515,7 @@ public class AuthService {
 		account.setLastname(userSignupP1.getLastname());
 		account.setEmail(userSignupP1.getEmail());
 		account.setMobile(userSignupP1.getMobile());
-		account.setPassword(password);
+		account.setPassword(encoder.encode(password));
 		
 		em.persist(account);
 		

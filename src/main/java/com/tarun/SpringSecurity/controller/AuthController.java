@@ -1,5 +1,6 @@
 package com.tarun.SpringSecurity.controller;
 
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.tarun.SpringSecurity.service.AuthService;
 
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class AuthController {
@@ -28,9 +30,10 @@ public class AuthController {
 	}
 	
 	@PostMapping("/login")
-	public String postLogin(@RequestParam String username,@RequestParam String password,ModelMap map) {
-		return authService.postLoginVerify(username,password,map);
+	public String postLogin(@RequestParam String username,@RequestParam String password,ModelMap map,HttpServletResponse response) {
+		return authService.postLoginVerify(username,password,map,response);
 	}
+	
 	
 	@GetMapping("/home")
 	public String getHome() {
