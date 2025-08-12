@@ -157,9 +157,34 @@
     <a th:href="@{/signupP1}">Create an Account</a><br><br>
   </div>
 
-  <div th:if="${loginError}" class="error">
-    <span th:text="${loginError}"></span>
-  </div>
+    <div th:if="${loginError}" class="error">
+	  <span th:text="${loginError}"></span>
+	</div>
+  
+  	<div th:if="${param.error}" class="error">
+	  <div th:if="${param.error[0] == 'google_email_not_registered'}">
+	    <span>This Google account is not registered. Please <a th:href="@{/signupP1}" style="color: #0066cc;">signup first</a> or use a registered email.</span>
+	  </div>
+	</div>
+  
+  <div style="margin-top: 20px;">
+  <a href="/SpringSecurity/oauth2/authorization/google" 
+     style="
+       display: inline-block;
+       background-color: #4285F4;
+       color: white;
+       padding: 12px 20px;
+       border-radius: 6px;
+       text-decoration: none;
+       font-weight: bold;
+       font-size: 16px;
+       box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+     ">
+    <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo" style="height:18px; vertical-align: middle; margin-right: 8px;">
+    Login with Google
+  </a>
+</div>
+  
   
   <div class="footer-note">
       This site is protected by reCAPTCHA and the Google
