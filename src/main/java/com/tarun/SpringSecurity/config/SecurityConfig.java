@@ -16,7 +16,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.tarun.SpringSecurity.filter.JwtFilter;
+import com.tarun.SpringSecurity.service.CustomLogoutSuccessHandler;
+import com.tarun.SpringSecurity.service.CustomOAuth2UserService;
 import com.tarun.SpringSecurity.service.MyUserDetailsService;
+import com.tarun.SpringSecurity.service.OAuth2LoginSuccessHandler;
 
 import jakarta.servlet.http.Cookie;
 
@@ -25,9 +28,15 @@ public class SecurityConfig {
 	
 	private final MyUserDetailsService userDetailsService;
 	private final JwtFilter jwtFilter;
-	public SecurityConfig(MyUserDetailsService userDetailsService,JwtFilter jwtFilter) {
+	private final CustomOAuth2UserService customOAuth2UserService;
+	private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+	private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
+	public SecurityConfig(MyUserDetailsService userDetailsService,JwtFilter jwtFilter,CustomOAuth2UserService customOAuth2UserService,OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler,CustomLogoutSuccessHandler customLogoutSuccessHandler) {
 		this.userDetailsService=userDetailsService;
 		this.jwtFilter=jwtFilter;
+		this.customOAuth2UserService = customOAuth2UserService;
+		this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
+		this.customLogoutSuccessHandler = customLogoutSuccessHandler;
 	}
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -38,12 +47,15 @@ public class SecurityConfig {
 			.authenticationProvider(authenticationProvider())
 			.logout(logout -> logout
 				    .logoutUrl("/logout") // allow POST (default) and GET if you want
-				    .deleteCookies("jwt")
-				    .logoutSuccessUrl("/login?logout")
+				    .invalidateHttpSession(true)
+				    .clearAuthentication(true)
+				    .deleteCookies("jwt","JSESSIONID")
+				    .logoutSuccessHandler(customLogoutSuccessHandler)
 				    .permitAll()
 				)
 			.formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/home"))
-		.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);		
+			.oauth2Login(oauth2 -> oauth2.loginPage("/login").userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService)).successHandler(oAuth2LoginSuccessHandler).failureHandler((request,response,exception)-> {response.sendRedirect("/login?error=google_email_not_registered");}))
+			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);		
 		return http.build();
 	}
 	
